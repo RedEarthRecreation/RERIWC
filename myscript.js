@@ -50,10 +50,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("myBar").style.width = scrolled + "%";
   }
 
-  const imagesFolder = "flora/images/"; // specify the folder path here
+  const imagesFolder = "https://redearthrecreation.github.io/flora/";
   const row = document.querySelector(".row");
 
 
+  
   fetch(imagesFolder)
     .then(response => response.text())
     .then(data => {
