@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function() {
 
 
@@ -13,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     imgText.innerHTML = imgs.alt;
     // Show the container element (hidden with CSS)
     expandImg.parentElement.style.display = "block";
-    
+
     // Scroll the page to center the expanded image
     var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
     var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -26,12 +25,12 @@ document.addEventListener("DOMContentLoaded", function() {
     var targetTop = containerTop - (viewportHeight - containerHeight) / 2;
     window.scrollTo(targetLeft, targetTop);
   }
-  
+
   function closeExpandedImg() {
     // Hide the container element (hidden with CSS)
     var expandImgContainer = document.querySelector(".container");
     expandImgContainer.style.display = "none";
-  
+
     // Scroll the page to center .Info3
     var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
     var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -53,23 +52,23 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   const imagesFolder = "flora/"; // specify the folder path here
     const row = document.querySelector(".row");
-    
+
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(this.responseText, "text/html");
-        const images = htmlDoc.querySelectorAll("a[href$='.jpg'], a[href$='.png'], a[href$='.gif']");
-    
+        const images = htmlDoc.querySelectorAll("a[href$='.jpg'], a[href$='.png'], a[href$='.gif'], a[href$='.PNG']");
+
         images.forEach(img => {
           const div = document.createElement("div");
           div.className = "column"; // add the new CSS class
-    
+
           const image = document.createElement("img");
-          image.src = imagesFolder + img.getAttribute("href").replace(/^\/+/, '').replace(/^flora\/+/, '');
+          image.src = "/" + imagesFolder + img.getAttribute("href").replace(/^\/+/, '').replace(/^flora\/+/, '');
           image.alt = img.textContent;
           image.onclick = function() { myFunction(this); };
-    
+
           div.appendChild(image);
           row.appendChild(div);
         });
@@ -78,4 +77,3 @@ document.addEventListener("DOMContentLoaded", function() {
     xhr.open("GET", imagesFolder);
     xhr.send();
 });
-
