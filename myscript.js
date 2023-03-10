@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+
   function myFunction(imgs) {
     // Get the expanded image
     var expandImg = document.getElementById("expandedImg");
@@ -41,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var targetTop = info3Top - (viewportHeight - info3Height) / 2;
     window.scrollTo(targetLeft, targetTop);
   }
-
   function updateProgressBar() {
     var container = document.querySelector('.row');
     var scrollLeft = container.scrollLeft;
@@ -49,31 +50,30 @@ document.addEventListener("DOMContentLoaded", function() {
     var scrolled = (scrollLeft / scrollWidth) * 100;
     document.getElementById("myBar").style.width = scrolled + "%";
   }
+  const imagesFolder = "flora/"; // specify the folder path here
+    const row = document.querySelector(".row");
 
-  const imagesFolder = "https://redearthrecreation.github.io/flora/";
-  const row = document.querySelector(".row");
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(this.responseText, "text/html");
+        const images = htmlDoc.querySelectorAll("a[href$='.jpg'], a[href$='.png'], a[href$='.gif']");
 
+        images.forEach(img => {
+          const div = document.createElement("div");
+          div.className = "column"; // add the new CSS class
 
-  
-  fetch(imagesFolder)
-    .then(response => response.text())
-    .then(data => {
-      const parser = new DOMParser();
-      const htmlDoc = parser.parseFromString(data, "text/html");
-      const images = htmlDoc.querySelectorAll("a[href$='.jpg'], a[href$='.png'], a[href$='.gif']");
+          const image = document.createElement("img");
+          image.src = imagesFolder + img.getAttribute("href").replace(/^\/+/, '').replace(/^flora\/+/, '');
+          image.alt = img.textContent;
+          image.onclick = function() { myFunction(this); };
 
-      images.forEach(img => {
-        const div = document.createElement("div");
-        div.className = "column";
-
-        const image = document.createElement("img");
-        image.src = imagesFolder + img.getAttribute("href").replace(/^\/+/, '').replace(/^flora\/+/, '');
-        image.alt = img.textContent;
-        image.onclick = function() { myFunction(this); };
-
-        div.appendChild(image);
-        row.appendChild(div);
-      });
-    })
-    .catch(error => console.error(error));
+          div.appendChild(image);
+          row.appendChild(div);
+        });
+      }
+    };
+    xhr.open("GET", imagesFolder);
+    xhr.send();
 });
