@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var scrolled = (scrollLeft / scrollWidth) * 100;
     document.getElementById("myBar").style.width = scrolled + "%";
   }
-  const imagesFolder = "flora/"; // specify the folder path here
+  const imagesFolder = "./flora/"; // specify the folder path here
     const row = document.querySelector(".row");
 
     const xhr = new XMLHttpRequest();
