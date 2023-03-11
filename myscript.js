@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
 
 
-  const imagesFolder = "./flora/"; // specify the folder path here
+  const imagesFolder = "http://www.yourdomain.com/flora/"; // absolute path
+ specify the folder path here
 const row = document.querySelector(".row");
 
 fetch(imagesFolder)
