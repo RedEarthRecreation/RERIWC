@@ -1,30 +1,25 @@
-document.addEventListener("DOMContentLoaded", function() {
-  const imagesFolder = "./flora/";
-  const row = document.querySelector(".row");
+const imageFolder = "./flora/";
 
-  fetch(imagesFolder)
-    .then(response => response.text())
-    .then(html => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const links = doc.querySelectorAll("a");
-      const images = [];
-      links.forEach(link => {
-        const href = link.getAttribute("href");
-        if (href.match(/\.(jpe?g|png|gif)$/)) {
-          const imagePath = imagesFolder + href;
-          images.push(imagePath);
-          console.log(`Found image: ${imagePath}`);
-        }
-      });
-      images.forEach(image => {
-        const img = document.createElement("img");
-        img.src = image;
-        row.appendChild(img);
-        console.log(`Appended image: ${image}`);
-      });
-    })
-    .catch(error => {
-      console.log(`Error fetching images: ${error}`);
+// Get list of image files in the folder
+fetch(imageFolder)
+  .then(response => response.text())
+  .then(data => {
+    // Extract the list of image file names from the HTML response
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(data, "text/html");
+    const imageFiles = Array.from(htmlDoc.querySelectorAll("a")).map(a => a.href);
+
+    // Create and append image elements to the .row div
+    const rowDiv = document.querySelector(".row");
+    imageFiles.forEach(imageFile => {
+      if (imageFile.endsWith(".jpg") || imageFile.endsWith(".jpeg") || imageFile.endsWith(".png")) {
+        const imageElement = document.createElement("img");
+        imageElement.src = imageFolder + imageFile;
+        imageElement.alt = imageFile;
+        rowDiv.appendChild(imageElement);
+      }
     });
-});
+  })
+  .catch(error => {
+    console.error(error);
+  });
