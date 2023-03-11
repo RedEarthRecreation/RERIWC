@@ -1,30 +1,24 @@
-// Get a reference to the .row div
-const row = document.querySelector('.row');
+document.addEventListener("DOMContentLoaded", function() {
+  const row = document.querySelector(".row");
+  const floraFolder = "https://RedEarthRecreation.github.io/flora/";
 
-// Create a new XMLHttpRequest object
-const xhr = new XMLHttpRequest();
-
-// Set up a callback function to handle the response
-xhr.onload = function() {
-  // Parse the JSON response
-  const files = JSON.parse(this.responseText);
-
-  // Loop through the list of files
-  files.forEach(function(file) {
-    // Check if the file is an image
-    if (file.type.startsWith('image/')) {
-      // Create a new img element
-      const img = document.createElement('img');
-
-      // Set the src attribute to the file path
-      img.src = './flora/' + file.name;
-
-      // Add the img element to the .row div
-      row.appendChild(img);
-    }
-  });
-};
-
-// Open the request and send it
-xhr.open('GET', './flora/');
-xhr.send();
+  fetch(floraFolder)
+    .then(response => response.text())
+    .then(html => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const images = doc.querySelectorAll("a[href]");
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i].href;
+        if (image.match(/\.(jpe?g|png|gif)$/)) {
+          const img = document.createElement("img");
+          img.src = floraFolder + image.split('/').pop();
+          img.alt = image.split('/').pop();
+          const col = document.createElement("div");
+          col.classList.add("col-sm-4", "mb-4");
+          col.appendChild(img);
+          row.appendChild(col);
+        }
+      }
+    });
+});
