@@ -1,23 +1,32 @@
-document.addEventListener("DOMContentLoaded", function() {
-  const row = document.querySelector(".row");
-  const floraFolder = "https://RedEarthRecreation.github.io/flora/";
+window.addEventListener('load', function() {
+  // Get the row element
+  var row = document.querySelector('.row');
 
-  fetch(floraFolder)
+  // Get the images from the flora folder
+  fetch('https://RedEarthRecreation.github.io/flora/')
     .then(response => response.text())
     .then(html => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const images = doc.querySelectorAll("a[href]");
-      for (let i = 0; i < images.length; i++) {
-        const image = images[i].href;
-        if (image.match(/\.(jpe?g|png|gif)$/)) {
-          const img = document.createElement("img");
-          img.src = floraFolder + image.split('/').pop();
-          img.alt = image.split('/').pop();
-          const col = document.createElement("div");
-          col.classList.add("col-sm-4", "mb-4");
-          col.appendChild(img);
-          row.appendChild(col);
+      // Parse the HTML response and get all the <a> elements
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(html, 'text/html');
+      var links = doc.querySelectorAll('a');
+
+      // Loop through the <a> elements and get the image URLs
+      for (var i = 0; i < links.length; i++) {
+        var link = links[i];
+        var href = link.getAttribute('href');
+        if (href.endsWith('.jpg') || href.endsWith('.jpeg') || href.endsWith('.png') || href.endsWith('.gif')) {
+          // Create an <img> element and set its src attribute
+          var img = document.createElement('img');
+          img.src = 'https://RedEarthRecreation.github.io/flora/' + href;
+
+          // Create a <div> element with class="col-lg-4 col-md-6 mb-4" and append the <img> element to it
+          var div = document.createElement('div');
+          div.classList.add('col-lg-4', 'col-md-6', 'mb-4');
+          div.appendChild(img);
+
+          // Append the <div> element to the row
+          row.appendChild(div);
         }
       }
     });
