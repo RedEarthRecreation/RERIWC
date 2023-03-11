@@ -1,25 +1,30 @@
-const imageFolder = "./flora/";
+// Get a reference to the .row div
+const row = document.querySelector('.row');
 
-// Get list of image files in the folder
-fetch(imageFolder)
-  .then(response => response.text())
-  .then(data => {
-    // Extract the list of image file names from the HTML response
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(data, "text/html");
-    const imageFiles = Array.from(htmlDoc.querySelectorAll("a"))
-      .map(a => a.href.replace(window.location.href, ""))
-      .filter(file => /\.(jpe?g|png)$/i.test(file));
+// Create a new XMLHttpRequest object
+const xhr = new XMLHttpRequest();
 
-    // Create and append image elements to the .row div
-    const rowDiv = document.querySelector(".row");
-    imageFiles.forEach(imageFile => {
-      const imageElement = document.createElement("img");
-      imageElement.src = imageFolder + imageFile;
-      imageElement.alt = imageFile;
-      rowDiv.appendChild(imageElement);
-    });
-  })
-  .catch(error => {
-    console.error(error);
+// Set up a callback function to handle the response
+xhr.onload = function() {
+  // Parse the JSON response
+  const files = JSON.parse(this.responseText);
+
+  // Loop through the list of files
+  files.forEach(function(file) {
+    // Check if the file is an image
+    if (file.type.startsWith('image/')) {
+      // Create a new img element
+      const img = document.createElement('img');
+
+      // Set the src attribute to the file path
+      img.src = './flora/' + file.name;
+
+      // Add the img element to the .row div
+      row.appendChild(img);
+    }
   });
+};
+
+// Open the request and send it
+xhr.open('GET', './flora/');
+xhr.send();
